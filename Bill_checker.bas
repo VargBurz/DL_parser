@@ -16,7 +16,7 @@ Dim DL_COUNT As Integer
 
 c = ActiveCell.Row
 
-For k = c To c + 100
+For k = c To c + 300
 
     TN = ActiveSheet.Cells(k, 16)
     Cells(k, 16).Select
@@ -24,8 +24,14 @@ For k = c To c + 100
         MsgBox ("Empty string. End of parsing!")
         Exit For
     End If
+    
+    If (ActiveSheet.Cells(k, 9) <> "Деловые линии") Then
+        'MsgBox ("ne DL")
+        GoTo NextIteration
+    End If
+    
     If (Len(TN) < 1) Then
-        MsgBox ("empty bill")
+        'MsgBox ("empty bill")
         GoTo NextIteration
     End If
     
@@ -42,6 +48,7 @@ For k = c To c + 100
     With CreateObject("Microsoft.XMLHTTP")
         
         If (Len(TN) > 13) Then
+            'MsgBox (TN)
             new_tn = tn_list(1)
         Else
             new_tn = TN
@@ -61,8 +68,10 @@ For k = c To c + 100
             dl_bill_number = (n - 1) / 2
             If bill_number <> dl_bill_number Then
                 ActiveSheet.Cells(k, 16).Interior.Color = vbYellow
-                MsgBox ("Ðàçíîå êîëè÷åñòâî ñ÷åòîâ!")
+                MsgBox ("Diffrent number of bills!")
             End If
+			
+			Erase RESULT_LIST
             For i = 1 To dl_bill_number
                 x = LIST(i * 2 - 1)
                 y = LIST(i * 2)
@@ -108,6 +117,12 @@ For k = c To c + 100
             DL_BILL = 0
             DL_COUNT = UBound(RESULT_LIST)
             For dl_b = 1 To DL_COUNT
+				If RESULT_LIST(dl_b) = 0 Then
+                    k_end = k_end + 1
+                    If k_end > 1 Then
+                        Exit For
+                    End If
+                End If
                 DL_BILL = DL_BILL + RESULT_LIST(dl_b)
             Next
                         
@@ -132,15 +147,15 @@ For k = c To c + 100
             'MsgBox (DL_BILL)
             
             If R_BILL = DL_BILL Then
-                MsgBox ("Ñóììà ñ÷åòîâ ñîâïàäàåò!")
+                MsgBox ("The amount of bills coincides!")
                 ActiveSheet.Cells(k, 17).Interior.Color = vbWhite
             Else
-                MsgBox ("Ñóììà ñ÷åòîâ íå ñîâïàäàåò!!!")
+                MsgBox ("The amount of bills doesn't coincide!")
                 ActiveSheet.Cells(k, 17).Interior.Color = vbRed
                 
             End If
         Else
-            MsgBox ("Îøèáêà îáðàùåíèÿ ê ñ÷åòó. Ïðîâåðü íîìåð!")
+            MsgBox ("Account Access Error. Check the number of TN!")
             ActiveSheet.Cells(k, 16).Interior.Color = vbRed
         End If
     
