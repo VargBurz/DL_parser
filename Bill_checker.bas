@@ -71,7 +71,7 @@ For k = c To c + 300
                 MsgBox ("Diffrent number of bills!")
             End If
 			
-			Erase RESULT_LIST
+	Erase RESULT_LIST
             For i = 1 To dl_bill_number
                 x = LIST(i * 2 - 1)
                 y = LIST(i * 2)
@@ -117,7 +117,7 @@ For k = c To c + 300
             DL_BILL = 0
             DL_COUNT = UBound(RESULT_LIST)
             For dl_b = 1 To DL_COUNT
-				If RESULT_LIST(dl_b) = 0 Then
+		If RESULT_LIST(dl_b) = 0 Then
                     k_end = k_end + 1
                     If k_end > 1 Then
                         Exit For
